@@ -1,0 +1,20 @@
+server:
+  port: 8081
+
+spring:
+  datasource:
+    url: jdbc:mysql://${DB_HOST:127.0.0.1}:${DB_PORT:3306}/${DB_NAME:cine}?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=America/Lima&characterEncoding=UTF-8
+    username: ${DB_USER:root}
+    password: ${DB_PASSWORD:}
+
+payu:
+  url: https://sandbox.api.payulatam.com/payments-api/4.0/service.cgi
+  api-login: ${PAYU_API_LOGIN:pRRXKOl8ikMmt9u}
+  api-key: ${PAYU_API_KEY:4Vj8eK4rloUd272L48hsrarnUA}
+  merchant-id: ${PAYU_MERCHANT_ID:508029}
+  account-id: ${PAYU_ACCOUNT_ID:512323}
+  test: ${PAYU_TEST:true}
+
+logging:
+  pattern:
+    console: "%d{HH:mm:ss.SSS} %-5level [%X{requestId:-}] %logger{36} - %msg%n"

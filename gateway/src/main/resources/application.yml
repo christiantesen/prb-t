@@ -1,0 +1,19 @@
+server:
+  port: 8080
+
+spring:
+  datasource:
+    url: jdbc:mysql://${DB_HOST:127.0.0.1}:${DB_PORT:3306}/${DB_NAME:cine}?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=America/Lima&characterEncoding=UTF-8
+    username: ${DB_USER:root}
+    password: ${DB_PASSWORD:}
+
+app:
+  premieres-url: ${PREMIERES_URL:http://127.0.0.1:3001}
+  candy-url: ${CANDY_URL:http://127.0.0.1:3002}
+  complete-url: ${COMPLETE_URL:http://127.0.0.1:8081}
+  jwt-secret: ${JWT_SECRET:bruma-cinema-jwt-secret-demo-2026-ok}
+  google-client-id: ${GOOGLE_CLIENT_ID:}
+
+logging:
+  pattern:
+    console: "%d{HH:mm:ss.SSS} %-5level [%X{requestId:-}] %logger{36} - %msg%n"

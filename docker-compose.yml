@@ -1,0 +1,120 @@
+services:
+  mysql:
+    image: mysql:8.0
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-cine-root}
+      MYSQL_DATABASE: cine
+    ports:
+      - "3307:3306"
+    volumes:
+      - ./db/init:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-uroot", "-p${DB_PASSWORD:-cine-root}"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+      start_period: 40s
+
+  premieres:
+    build: ./services/premieres
+    environment:
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_USER: root
+      DB_PASSWORD: ${DB_PASSWORD:-cine-root}
+      DB_NAME: cine
+      PORT: 3001
+    depends_on:
+      mysql:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3001/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+
+  candystore:
+    build: ./services/candystore
+    environment:
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_USER: root
+      DB_PASSWORD: ${DB_PASSWORD:-cine-root}
+      DB_NAME: cine
+      PORT: 3002
+    depends_on:
+      mysql:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3002/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+
+  complete:
+    build: ./services/complete
+    environment:
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_USER: root
+      DB_PASSWORD: ${DB_PASSWORD:-cine-root}
+      DB_NAME: cine
+      PAYU_API_LOGIN: ${PAYU_API_LOGIN:-pRRXKOl8ikMmt9u}
+      PAYU_API_KEY: ${PAYU_API_KEY:-4Vj8eK4rloUd272L48hsrarnUA}
+      PAYU_MERCHANT_ID: ${PAYU_MERCHANT_ID:-508029}
+      PAYU_ACCOUNT_ID: ${PAYU_ACCOUNT_ID:-512323}
+      PAYU_TEST: "true"
+    ports:
+      - "8081:8081"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "bash -c 'echo > /dev/tcp/127.0.0.1/8081'"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 30s
+
+  gateway:
+    build: ./gateway
+    environment:
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_USER: root
+      DB_PASSWORD: ${DB_PASSWORD:-cine-root}
+      DB_NAME: cine
+      JWT_SECRET: ${JWT_SECRET:-bruma-cinema-jwt-secret-demo-2026-ok}
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-}
+      PREMIERES_URL: http://premieres:3001
+      CANDY_URL: http://candystore:3002
+      COMPLETE_URL: http://complete:8081
+    ports:
+      - "8080:8080"
+    depends_on:
+      premieres:
+        condition: service_healthy
+      candystore:
+        condition: service_healthy
+      complete:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "bash -c 'echo > /dev/tcp/127.0.0.1/8080'"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 30s
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        VITE_GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-}
+    ports:
+      - "8088:80"
+    depends_on:
+      gateway:
+        condition: service_healthy

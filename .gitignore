@@ -1,0 +1,12 @@
+node_modules/
+dist/
+target/
+.env
+client_secret*.json
+*googleusercontent*.json
+.cursor/
+.tools/
+*.log
+.idea/
+*.iml
+.vscode/

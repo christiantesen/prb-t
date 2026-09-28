@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 600">
+  <rect width="400" height="600" fill="#141026"/>
+  <circle cx="200" cy="230" r="90" fill="none" stroke="#7d5cff" stroke-width="8"/>
+  <text x="200" y="246" text-anchor="middle" font-family="Georgia" font-size="54" fill="#7d5cff">RN</text>
+  <text x="32" y="470" font-family="Georgia" font-size="28" fill="#f4ecdf">Rio de neon</text>
+  <rect x="32" y="500" width="120" height="4" fill="#7d5cff"/>
+</svg>

@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 600">
+  <rect width="400" height="600" fill="#10241c"/>
+  <circle cx="200" cy="230" r="90" fill="none" stroke="#d7a441" stroke-width="8"/>
+  <text x="200" y="246" text-anchor="middle" font-family="Georgia" font-size="54" fill="#d7a441">FI</text>
+  <text x="32" y="470" font-family="Georgia" font-size="28" fill="#f4ecdf">El faro interior</text>
+  <rect x="32" y="500" width="120" height="4" fill="#d7a441"/>
+</svg>
