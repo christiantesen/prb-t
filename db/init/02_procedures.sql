@@ -14,7 +14,10 @@ BEGIN
     id,
     title,
     synopsis,
+    release_year AS releaseYear,
     image_url AS imageUrl,
+    genre,
+    stars,
     display_order AS displayOrder
   FROM premiere
   ORDER BY display_order;

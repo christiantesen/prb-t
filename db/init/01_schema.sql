@@ -9,7 +9,10 @@ CREATE TABLE IF NOT EXISTS premiere (
   id INT NOT NULL AUTO_INCREMENT,
   title VARCHAR(200) NOT NULL,
   synopsis TEXT NOT NULL,
+  release_year INT,
   image_url VARCHAR(500) NOT NULL,
+  genre VARCHAR(200),
+  stars DECIMAL(3,1),
   display_order INT NOT NULL,
   PRIMARY KEY (id)
 );
